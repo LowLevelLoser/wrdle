@@ -5,7 +5,7 @@
 #include <time.h>
 #include "tc.h"
 /*=========================================*/
-int mainLoop(char*, char*);
+bool mainLoop(char*, char*);
 /*=========================================*/
 
 int main(){
@@ -62,21 +62,17 @@ int main(){
 	//start of game
 	printf("word size %ld\n", strlen(str1 + 1));
 	for(int x = 0; x < 6; x++){
-		int o = 0;
+		bool loser = true;
 		printf("\ngive me your guess\n");
 		fgets(str2, 20, stdin);
-		if(strlen(str2) == strlen(str1)){
-			o = mainLoop(str2, str1);
-		}
-		else{
-			printf("wrong size \n");
-		}
-		if(o == strlen(str1)){
+		if(mainLoop(str2, str1)){
 			printf("%s\nYou Win\n%s", TC_GRN, TC_NRM);
-			break;
+			fclose(flptr);
+			return 0;
 		}
 	}
-
+	printf("%s\nYou Lose\n%s", TC_RED, TC_NRM);
+	
 	fclose(flptr);
 
 	return 0;
@@ -84,11 +80,16 @@ int main(){
 
 /*============================================================*/
 
-int mainLoop(char *wrt, char *str){
+bool mainLoop(char *wrt, char *str){
 	int com[50];
 	int chkS[50];
 	int chkW[50];
 	int c = 0;
+
+	if(strlen(wrt) != strlen(str)){
+		printf("%swrong size%s\n", TC_RED, TC_NRM);
+		return false;
+	}
 
 	for(int i = 0; i < strlen(str); i++){
 		com[i] = 0;
@@ -133,6 +134,6 @@ int mainLoop(char *wrt, char *str){
 		}
 	}
 
-	return c;
+	return c == strlen(str);
 }
 
